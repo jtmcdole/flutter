@@ -25,10 +25,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # must get all tags for flutter update-packags
-          fetch-tags: true
-          ref: ${{ github.event.pull_request.head.sha }}
+        # with:
+          # fetch-depth: 0 # must get all tags for flutter update-packags
+          # fetch-tags: true
+          # ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set upstream
         run: |
