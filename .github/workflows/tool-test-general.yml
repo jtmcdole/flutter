@@ -30,10 +30,6 @@ jobs:
           fetch-tags: true
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: i am going insane
-        run: |
-          git describe --long --tags
-
       - name: Set upstream
         run: |
           git remote add upstream https://github.com/flutter/flutter.git
