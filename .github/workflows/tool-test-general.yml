@@ -25,12 +25,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Fetching base and master if pull_request
         if: github.event_name == 'pull_request'
         run: |
+          echo "pull_request is a go"
           git fetch --no-tags --prune --depth=1 origin ${{ github.event.pull_request.base.sha }}
           git fetch --no-tags --prune --depth=1 origin master
+          echo "FLUTTER_PREBUILT_ENGINE_VERSION=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
 
       # The following step is only run LOCALLY - Github runners have everything on them
       - name: Set up our JDK environment
@@ -52,7 +54,7 @@ jobs:
         if: ${{ env.ACT }}
         run: |
           sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-    
+
       - name: Path Update
         run: |
           echo "$PWD/bin" >> "$GITHUB_PATH"
