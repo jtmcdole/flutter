@@ -32,6 +32,7 @@ jobs:
           echo "pull_request is a go"
           git fetch --prune --depth=1 origin ${{ github.event.pull_request.base.sha }}
           git fetch --prune --depth=1 origin master
+          git fetch --tags origin
           echo "FLUTTER_PREBUILT_ENGINE_VERSION=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
 
       # The following step is only run LOCALLY - Github runners have everything on them
