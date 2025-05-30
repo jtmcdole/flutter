@@ -28,6 +28,11 @@ jobs:
         with:
           fetch-depth: 0 # must get all tags for flutter update-packags
 
+      - name: Set upstream
+        run: |
+          git remote add upstream https://github.com/flutter/flutter.git
+          git fetch --all --tags --prune
+
       - name: Fetching base and master if pull_request
         if: github.event_name == 'pull_request'
         run: |
