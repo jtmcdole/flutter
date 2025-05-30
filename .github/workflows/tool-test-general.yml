@@ -1,3 +1,4 @@
+# Do not submit - test
 name: Tool tests general - experiment
 
 on:
@@ -22,6 +23,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          # Checkout the PR; not the merge commit - we need to describe tags
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set upstream (if not flutter/flutter)
+        if: ${{ github.repository != 'flutter/flutter' }}
+        run: |
+          git remote add upstream https://github.com/flutter/flutter.git
+          git fetch --all --tags
+
+      # - name: Fetching base and master if pull_request
+      #   if: github.event_name == 'pull_request'
+      #   run: |
+      #     echo "pull_request is a go"
+      #     git fetch --no-tags --prune --depth=1 origin ${{ github.event.pull_request.base.sha }}
+      #     git fetch --no-tags --prune --depth=1 origin master
+      #     echo "FLUTTER_PREBUILT_ENGINE_VERSION=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+
       # The following step is only run LOCALLY - Github runners have everything on them
       - name: Set up our JDK environment
         if: ${{ env.ACT }}
@@ -42,9 +65,6 @@ jobs:
         if: ${{ env.ACT }}
         run: |
           sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Path Update
         run: |
