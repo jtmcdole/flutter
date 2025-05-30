@@ -27,54 +27,64 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # must get all tags for flutter update-packags
+          fetch-tags: true
           ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: i am going insane
+        run: |
+          git describe --long --tags
 
       - name: Set upstream
         run: |
           git remote add upstream https://github.com/flutter/flutter.git
-          git fetch --all --tags --prune
+          git fetch --all --tags
 
-      - name: Fetching base and master if pull_request
-        if: github.event_name == 'pull_request'
+      - name: i am going insane 2
         run: |
-          echo "pull_request is a go"
-          git fetch --no-tags --prune --depth=1 origin ${{ github.event.pull_request.base.sha }}
-          git fetch --no-tags --prune --depth=1 origin master
-          echo "FLUTTER_PREBUILT_ENGINE_VERSION=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+          git describe --long --tags
 
-      # The following step is only run LOCALLY - Github runners have everything on them
-      - name: Set up our JDK environment
-        if: ${{ env.ACT }}
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
-        with:
-          java-version: '21'
-          distribution: 'temurin'
 
-      # The following step is only run LOCALLY - Github runners have everything on them
-      - name: Setup Android SDK
-        if: ${{ env.ACT }}
-        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
-        with:
-          cmdline-tools-version: 13114758
+      # - name: Fetching base and master if pull_request
+      #   if: github.event_name == 'pull_request'
+      #   run: |
+      #     echo "pull_request is a go"
+      #     git fetch --no-tags --prune --depth=1 origin ${{ github.event.pull_request.base.sha }}
+      #     git fetch --no-tags --prune --depth=1 origin master
+      #     echo "FLUTTER_PREBUILT_ENGINE_VERSION=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
 
-      # The following step is only run LOCALLY - Github runners have everything on them
-      - name: install android
-        if: ${{ env.ACT }}
-        run: |
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+      # # The following step is only run LOCALLY - Github runners have everything on them
+      # - name: Set up our JDK environment
+      #   if: ${{ env.ACT }}
+      #   uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
+      #   with:
+      #     java-version: '21'
+      #     distribution: 'temurin'
 
-      - name: Path Update
-        run: |
-          echo "$PWD/bin" >> "$GITHUB_PATH"
+      # # The following step is only run LOCALLY - Github runners have everything on them
+      # - name: Setup Android SDK
+      #   if: ${{ env.ACT }}
+      #   uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+      #   with:
+      #     cmdline-tools-version: 13114758
 
-      - name: Flutter Doctor
-        run: |
-          flutter doctor
+      # # The following step is only run LOCALLY - Github runners have everything on them
+      # - name: install android
+      #   if: ${{ env.ACT }}
+      #   run: |
+      #     sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
-      - name: Get packages
-        run: |
-          flutter update-packages
+      # - name: Path Update
+      #   run: |
+      #     echo "$PWD/bin" >> "$GITHUB_PATH"
 
-      - name: Tool Test
-        run: |
-          SHARD=tool_tests SUBSHARD=general dart --enable-asserts dev/bots/test.dart
+      # - name: Flutter Doctor
+      #   run: |
+      #     flutter doctor
+
+      # - name: Get packages
+      #   run: |
+      #     flutter update-packages
+
+      # - name: Tool Test
+      #   run: |
+      #     SHARD=tool_tests SUBSHARD=general dart --enable-asserts dev/bots/test.dart
