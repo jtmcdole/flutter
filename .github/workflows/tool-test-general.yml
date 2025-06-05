@@ -78,7 +78,7 @@ jobs:
         id: android-sdk-setup
         if: env.ACT
         with:
-          path: /root/.android/sdk
+          path: $HOME/.android/sdk
           key: ${{ runner.os }}-${{ steps.android-sdk-version.outputs.revision }}
       - name: Setup Android SDK (cold cache)
         if: env.ACT && steps.android-sdk-setup.outputs.cache-hit != 'true'
@@ -90,10 +90,10 @@ jobs:
       - name: Setup Android SDK (warm cache)
         if: env.ACT && steps.android-sdk-setup.outputs.cache-hit == 'true'
         run: |
-          echo "ANDROID_SDK_ROOT=/root/.android/sdk" >> $GITHUB_ENV
-          echo "ANDROID_HOME=/root/.android/sdk" >> $GITHUB_ENV
-          echo "/root/.android/sdk/cmdline-tools/${{ env.ANDROID_TOOLS_VERSION }}/bin" >> "$GITHUB_PATH"
-          echo "/root/.android/sdk/platform-tools" >> "$GITHUB_PATH"
+          echo "ANDROID_SDK_ROOT=$HOME/.android/sdk" >> $GITHUB_ENV
+          echo "ANDROID_HOME=$HOME/.android/sdk" >> $GITHUB_ENV
+          echo "$HOME/.android/sdk/cmdline-tools/${{ env.ANDROID_TOOLS_VERSION }}/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.android/sdk/platform-tools" >> "$GITHUB_PATH"
 
       - name: Add `flutter` to the PATH
         run: |
@@ -111,19 +111,6 @@ jobs:
           path: ${{ github.workspace }}/bin/cache
           key: ${{ runner.os }}-${{ steps.flutter-revision.outputs.revision }}
 
-
-      - name: supdawg
-        run: |
-          echo "yo dawg"
-          echo "HOME=$HOME"
-          echo "PWD=$PWD"
-          echo "PATH=$PATH"
-          echo "GITHUB_PATH=$GITHUB_PATH"
-          echo "ENV=$(env)"
-
-      - name: supdawg2
-        run: exit 1
-
       - name: pub deps hash
         id: pub-deps-hash
         run: |
@@ -137,7 +124,7 @@ jobs:
         id: pub-cache
         with:
           path: |
-            /root/.pub-cache
+            $HOME/.pub-cache
             ${{ github.workspace }}/**/.dart_tool
             ${{ github.workspace }}/**/pubspec.lock
           key: ${{ runner.os }}-pub-${{ steps.pub-deps-hash.outputs.revision }}
