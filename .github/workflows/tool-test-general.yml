@@ -115,10 +115,7 @@ jobs:
         id: pub-deps-hash
         run: |
           # Find all 'pubspec.yaml' files and sort them by their full path.
-          find dev examples packages -name "pubspec.yaml" -print0 | sort -z | while IFS= read -r -d $'\0' file; do
-            # Concatenate the content of each file.
-            cat "$file"
-          done | sha256sum >> "$RUNNER_TEMP/pub_deps_sha"
+          find dev examples packages -name "pubspec.yaml" -print0 | sort -z | xargs -0 cat | sha256sum  >> "$RUNNER_TEMP/pub_deps_sha"
           echo "revision=$(cat "$RUNNER_TEMP/pub_deps_sha")" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         id: pub-cache
